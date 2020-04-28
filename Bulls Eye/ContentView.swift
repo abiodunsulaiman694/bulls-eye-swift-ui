@@ -16,20 +16,63 @@ struct ContentView: View {
     @State var score = 0
     @State var round = 1
     
+    let midnightBlue = Color(red: 0.0/255.0, green: 51.0/255.0, blue: 102.0/255.0)
+    
+    struct Shadow: ViewModifier {
+        func body(content: Content) -> some View {
+            return content
+            .shadow(color: Color.black, radius: 5, x: 2, y: 2)
+        }
+    }
+    
+    struct LabelStyle: ViewModifier {
+        func body(content: Content) -> some View {
+            return content
+            .modifier(Shadow())
+            .foregroundColor(Color.white)
+            .font(Font.custom("Arial Rounded MT Bold", size: 18))
+        }
+    }
+    
+    struct ValueStyle: ViewModifier {
+        func body(content: Content) -> some View {
+            return content
+            .modifier(Shadow())
+                .foregroundColor(Color.yellow)
+                .font(Font.custom("Arial Rounded MT Bold", size: 24))
+        }
+    }
+    
+    struct LargeButtonTextStyle: ViewModifier {
+        func body(content: Content) -> some View {
+            return content
+                .foregroundColor(Color.black)
+                .font(Font.custom("Arial Rounded MT Bold", size: 18))
+        }
+    }
+    
+    struct SmallButtonTextStyle: ViewModifier {
+        func body(content: Content) -> some View {
+            return content
+                .foregroundColor(Color.black)
+                .font(Font.custom("Arial Rounded MT Bold", size: 12))
+        }
+    }
+    
     var body: some View {
         VStack {
             //Target row
             Spacer()
             HStack {
-                Text("Put the bull's eye as close as you can to:")
-                Text("\(self.target)")
+                Text("Put the bull's eye as close as you can to:").modifier(LabelStyle())
+                Text("\(self.target)").modifier(ValueStyle())
             }
             Spacer()
             //slider row
             HStack {
-                Text("1")
-                Slider(value: $sliderValue, in: 1...100)
-                Text("100")
+                Text("1").modifier(LabelStyle())
+                Slider(value: $sliderValue, in: 1...100).accentColor(Color.green)
+                Text("100").modifier(LabelStyle())
             }
             Spacer()
             
@@ -38,7 +81,7 @@ struct ContentView: View {
                 print("Button pressed")
                 self.alertIsVisible = true
             }) {
-                Text(/*@START_MENU_TOKEN@*/"Click me"/*@END_MENU_TOKEN@*/)
+                Text("Get Score").modifier(LargeButtonTextStyle())
             }
             .alert(isPresented: $alertIsVisible) {
                 () -> Alert in
@@ -49,6 +92,7 @@ struct ContentView: View {
                         self.round += 1
                     })
             }
+            .background(Image("Button"))
             Spacer()
             
             //score row
@@ -56,22 +100,34 @@ struct ContentView: View {
                 Button(action: {
                     self.resetGame()
                 }) {
-                    Text("Start Over")
+                    HStack {
+                        Image("StartOverIcon")
+                        Text("Start Over").modifier(SmallButtonTextStyle())
+                        
+                    }
                 }
+                .background(Image("Button"))
                 Spacer()
-                Text("Score")
-                Text("\(score)")
+                Text("Score").modifier(LabelStyle())
+                Text("\(score)").modifier(ValueStyle())
                 Spacer()
-                Text("Round")
-                Text("\(round)")
+                Text("Round").modifier(LabelStyle())
+                Text("\(round)").modifier(ValueStyle())
                 Spacer()
                 Button(action: {}) {
-                    Text("info")
+                    HStack {
+                        Image("InfoIcon")
+                        Text("info").modifier(SmallButtonTextStyle())
+                        
+                    }
                 }
+                .background(Image("Button"))
                 
             }
             .padding(.bottom, 20)
         }
+        .background(Image("Background"), alignment: .center).modifier(Shadow())
+    .accentColor(midnightBlue)
     }
     
     func resetGame() -> Void {
