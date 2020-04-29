@@ -114,7 +114,7 @@ struct ContentView: View {
                 Text("Round").modifier(LabelStyle())
                 Text("\(round)").modifier(ValueStyle())
                 Spacer()
-                Button(action: {}) {
+                NavigationLink(destination: AboutView()) {
                     HStack {
                         Image("InfoIcon")
                         Text("info").modifier(SmallButtonTextStyle())
@@ -128,6 +128,7 @@ struct ContentView: View {
         }
         .background(Image("Background"), alignment: .center).modifier(Shadow())
     .accentColor(midnightBlue)
+    .navigationBarTitle("BullsEye")
     }
     
     func resetGame() -> Void {
@@ -147,16 +148,15 @@ struct ContentView: View {
     
     func pointsForCurrentRound() -> Int {
         let maximumScore = 100
-        let difference = 100 - getDifference()
         let bonus: Int
-        if difference == 0 {
+        if getDifference() == 0 {
             bonus = 100
-        } else if difference == 1 {
+        } else if getDifference() == 1 {
             bonus = 50
         } else {
             bonus = 0
         }
-        return maximumScore - (difference + bonus)
+        return (maximumScore - getDifference()) + bonus
     }
     
     func alertTitle() -> String {
